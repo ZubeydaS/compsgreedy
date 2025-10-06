@@ -1,4 +1,5 @@
-# main.py
+# Starter code. 
+
 from dataLoader import load_destinations, load_roads
 from greedyAlgorithm import greedy_company_strategy, greedy_driver_strategy
 

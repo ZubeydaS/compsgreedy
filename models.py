@@ -1,4 +1,5 @@
-# models.py
+# Starter code. 
+# Basic data classes for nodes (places) and edges (roads).
 
 class Place:
     def __init__(self, place_id, name, delivery_fee, tip_estimate):

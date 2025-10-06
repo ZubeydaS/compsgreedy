@@ -1,4 +1,5 @@
-# data_loader.py
+# Starter code. 
+# Handles CSV file reading and builds adjacency lists. 
 import csv
 from models import Place, Road
 
