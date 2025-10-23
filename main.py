@@ -1,13 +1,12 @@
 """
 Greedy Algorithm Assignment - Core Classes and Utilities
 
-This file contains the Node and Edge classes, plus helper functions.
-Students import from this file but implement their algorithms in student_implementation.py
+This file contains the Node and Edge classes, with helper functions.
+
+You shouldn't need to modify this file.
+
 """
-
-import math
 from typing import List
-
 
 class Node:
     """
@@ -37,9 +36,17 @@ class Node:
         self.priority = priority
         self.is_depot = is_depot
     
-    def distance_to(self, other: 'Node') -> float:
-        """Calculate Euclidean distance to another node."""
-        return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+    def distance_to(self, other_node) -> float:
+        """
+        Calculate Euclidean distance to another node.
+        
+        Args:
+            other_node (Node): The target node
+            
+        Returns:
+            float: Euclidean distance between this node and the other node
+        """
+        return ((self.x - other_node.x) ** 2 + (self.y - other_node.y) ** 2) ** 0.5
     
     def __repr__(self):
         depot_str = " (DEPOT)" if self.is_depot else ""
@@ -47,12 +54,9 @@ class Node:
                 f"Fee=${self.delivery_fee:.2f}, Tip=${self.estimated_tip:.2f}, "
                 f"Region={self.region}, Priority={self.priority}")
 
-
 class Edge:
     """
     Represents a road connecting two nodes.
-    
-    Students can calculate weights using edge.get_distance() or edge.u.distance_to(edge.v)
     
     Attributes:
         u (Node): First endpoint
@@ -90,42 +94,3 @@ def calculate_travel_cost(distance: float, base_cost_per_mile: float = 0.50) -> 
         float: Total travel cost
     """
     return distance * base_cost_per_mile
-
-
-def get_neighbors(node: Node, edges: List[Edge]) -> List[Node]:
-    """
-    Get all nodes directly connected to the given node via road edges.
-    
-    Args:
-        node (Node): The node to find neighbors for
-        edges (List[Edge]): All road Edge objects
-        
-    Returns:
-        List[Node]: List of neighboring nodes connected by roads
-    """
-    neighbors = []
-    for edge in edges:
-        if edge.u.id == node.id:
-            neighbors.append(edge.v)
-        elif edge.v.id == node.id:
-            neighbors.append(edge.u)
-    return neighbors
-
-
-def print_route_summary(route: List[Node], total_profit: float, total_cost: float):
-    """
-    Print a formatted summary of the delivery route.
-    
-    Args:
-        route (List[Node]): The sequence of nodes visited
-        total_profit (float): Total profit/earnings from the route
-        total_cost (float): Total travel cost
-    """
-    print("\n" + "="*60)
-    print("ROUTE SUMMARY")
-    print("="*60)
-    print(f"Route: {' -> '.join(str(node.id) for node in route)}")
-    print(f"\nTotal Travel Cost: ${total_cost:.2f}")
-    print(f"Total Profit/Earnings: ${total_profit:.2f}")
-    print("="*60 + "\n")
-

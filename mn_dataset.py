@@ -1,10 +1,12 @@
 """
-Minnesota Cities Dataset - Direct Nodes and Edges
+Greedy Algorithm Assignment - Minnesota Cities Dataset 
 
-Students work directly with MN_NODES and MN_EDGES lists.
-No creation functions needed - just import and use.
+This file include list of Nodes of MN cities and list of Edges of simplfied Roads.
+
+You shouldn't need to modify this file.
 """
 from main import Node, Edge
+from typing import List
 
 # === Minnesota city nodes (with attributes) ===================================
 MN_NODES = [
@@ -16,11 +18,11 @@ MN_NODES = [
     Node(1, 10.0, -2.0, delivery_fee=12.50, estimated_tip=4.00, 
          region="downtown", priority=2, is_depot=False),  # St Paul
     Node(2, -4.0, -6.0, delivery_fee=11.40, estimated_tip=3.60, 
-         region="suburban", priority=2, is_depot=False),  # Edina
+         region="downtown", priority=2, is_depot=False),  # Edina
     Node(3, -2.0, -8.0, delivery_fee=10.75, estimated_tip=3.00, 
-         region="suburban", priority=3, is_depot=False),  # Bloomington
+         region="downtown", priority=3, is_depot=False),  # Bloomington
     Node(4, 5.0, 3.0, delivery_fee=10.30, estimated_tip=2.60, 
-         region="suburban", priority=3, is_depot=False),  # Roseville
+         region="downtown", priority=3, is_depot=False),  # Roseville
     
     # Northern Suburbs
     Node(5, -6.0, 6.0, delivery_fee=12.40, estimated_tip=3.00, 
@@ -76,7 +78,7 @@ MN_NODES = [
 # Find depot for easy access
 MN_DEPOT = MN_NODES[0]  # Minneapolis is always node 0
 
-# === Minnesota road edges (direct list) ===================================
+# === Minnesota road edges ===================================
 MN_EDGES = [
     # Major east-west spine (I-94 corridor)
     Edge(MN_NODES[24], MN_NODES[5]),   # Monticello - Maple Grove
@@ -122,22 +124,3 @@ MN_EDGES = [
     Edge(MN_NODES[4], MN_NODES[6]),    # Roseville - Blaine
     Edge(MN_NODES[2], MN_NODES[19]),   # Edina - Chanhassen
 ]
-
-
-def get_neighbors(node: Node) -> List[Node]:
-    """
-    Get all nodes directly connected to the given node via roads.
-    
-    Args:
-        node (Node): The node to find neighbors for
-        
-    Returns:
-        List[Node]: List of neighboring nodes connected by roads
-    """
-    neighbors = []
-    for edge in MN_EDGES:
-        if edge.u.id == node.id:
-            neighbors.append(edge.v)
-        elif edge.v.id == node.id:
-            neighbors.append(edge.u)
-    return neighbors
