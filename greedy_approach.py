@@ -56,29 +56,59 @@ def greedy_company_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> T
         
     TODO: Students implement this function
     """
-def greedy_company_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> Tuple[List[Node], float]:
-    """
-    Part A: Implement the company's greedy algorithm.
+    visited = set()
+    route = [depot]
+    current_node = depot
+    total_profit = 0.0
+
+    # Mark visited depot 
+    visited.add(depot.id)
+    # Continuing until all nodes (customers in this case) are visited) 
+    customers = []
+    for node in nodes:
+        if not node.is_depot:
+            customers.append(node)
+
+    # visit each customers +1 for depot!
+    while len(visited) < len(customers) +1:
+        # get possible next stops (unvisited neighbors)
+        neighbors = get_neighbors(current, edges)
+        next_stops = []
+            for n in neighbors:
+                if n.id not in visited and n.is_depot == False:
+                    next_stops.append(n)
+    # If no neighbors found, find the best stop by profit
+    if not next_stops:
+        break 
+    best_next = None
+    best_profit = -float('inf')
     
-    Goal: Maximize company profit (delivery_fee - travel_cost)
+    for neighbor in next_stops:
+        #calculating distance and travel costs
+        dist = current.distance_to(neighbor)
+        cost = calculate_travel_cost(dist)
+        # profit = delivery_fee - travel_costs
+        profit = neighbor.delivery_fee - cost
+
+    # track the best option
+    if profit > best_profit:
+        best_profit = profit
+        best_next = neighbor
+    # moving to the best next stop
+    current = best_next
+    route.append(current)
+    visited.add(current.id)
+    total_profit += best_profit
+
+    # return to depot
+    return_dist = current.distance_to(depot)
+    return_cost = calculate_travel_cost(return_dist)
+    total_profit -= return_cost
+    route.append(depot)
     
-    Algorithm Steps:
-    1. Start at the depot
-    2. Look at all unvisited neighboring customer nodes (connected by roads)
-    3. Calculate profit for each: delivery_fee - travel_cost to reach it
-    4. Choose the neighbor with highest profit
-    5. Repeat until all customers visited
-    6. Return to depot
-    
-    Args:
-        nodes (List[Node]): All delivery locations including depot
-        depot (Node): The starting depot location
-        edges (List[Edge]): All road connections between cities
-        
-    Returns:
-        Tuple[List[Node], float]: (route as list of nodes, total profit)
-        
-    TODO: Students implement this function
+return route, total_profit
+                        
+            
     """
     # START YOUR IMPLEMENTATION HERE
     
@@ -103,54 +133,63 @@ def greedy_company_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> T
 
 def greedy_driver_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> Tuple[List[Node], float]:
     """
-    Part B: Implement the driver's greedy algorithm.
+  #  Part B: Implement the driver's greedy algorithm.
     
-    Goal: Maximize driver earnings (delivery_fee + estimated_tip - travel_cost)
+  #  Goal: Maximize driver earnings (delivery_fee + estimated_tip - travel_cost)
+
+      visited = set()
+    route = [depot]
+    current_node = depot
+    total_profit = 0.0
+
+    # Mark visited depot 
+    visited.add(depot.id)
+    # Continuing until all nodes (customers in this case) are visited) 
+    customers = []
+    for node in nodes:
+        if not node.is_depot:
+            customers.append(node)
+
+    # visit each customers +1 for depot!
+    while len(visited) < len(customers) +1:
+        # get possible next stops (unvisited neighbors)
+        neighbors = get_neighbors(current, edges)
+        next_stops = []
+            for n in neighbors:
+                if n.id not in visited and n.is_depot == False:
+                    next_stops.append(n)
+    # If no neighbors found, find the best stop by profit
+    if not next_stops:
+        break 
+    best_next = None
+    best_profit = -float('inf')
     
-    Algorithm Steps:
-    1. Start at the depot
-    2. Look at all unvisited neighboring customer nodes (connected by roads)
-    3. Calculate earnings for each: delivery_fee + tip - travel_cost
-    4. Choose the neighbor with highest earnings
-    5. Repeat until all customers visited
-    6. Return to depot
-    
-    Args:
-        nodes (List[Node]): All delivery locations including depot
-        depot (Node): The starting depot location
-        edges (List[Edge]): All road connections between cities
-        
-    Returns:
-        Tuple[List[Node], float]: (route as list of nodes, total earnings)
-        
-    TODO: Students implement this function
-    """
-def greedy_driver_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> Tuple[List[Node], float]:
-    """
-    Part B: Implement the driver's greedy algorithm.
-    
-    Goal: Maximize driver earnings (delivery_fee + estimated_tip - travel_cost)
-    
-    Algorithm Steps:
-    1. Start at the depot
-    2. Look at all unvisited neighboring customer nodes (connected by roads)
-    3. Calculate earnings for each: delivery_fee + tip - travel_cost
-    4. Choose the neighbor with highest earnings
-    5. Repeat until all customers visited
-    6. Return to depot
-    
-    Args:
-        nodes (List[Node]): All delivery locations including depot
-        depot (Node): The starting depot location
-        edges (List[Edge]): All road connections between cities
-        
-    Returns:
-        Tuple[List[Node], float]: (route as list of nodes, total earnings)
-        
-    TODO: Students implement this function
+    for neighbor in next_stops:
+        #calculating distance and travel costs
+        dist = current.distance_to(neighbor)
+        cost = calculate_travel_cost(dist)
+        # earnings = delivery fee + estimated tip - travel_cost
+        earnings = neighbor.delivery_fee + neighbor.estimated_tip - cost
+
+        if earnings > best_earnings:
+            best_earnings = earnings
+            best_next = neighbor
+            
+            current = best_next
+            route.append(current)
+            visited.add(current.id)
+            total_earnings += best_earnings
+
+        #return to depot
+        if current != depot:
+            return_dist + current_distance_to(depot)
+            return_cost + calculate_travel_cost(return_dist)
+            total_earnings -= return_cost
+            route.append(depot)
+        return route, total_earnings
     """
     # START YOUR IMPLEMENTATION HERE
-    
+
     # Hints:
     # - Use get_neighbors(current_node, edges) to find connected cities
     # - Use current_node.distance_to(neighbor) to get distance
@@ -170,7 +209,8 @@ def greedy_driver_route(nodes: List[Node], depot: Node, edges: List[Edge]) -> Tu
 # ============================================================================
 
 def greedy_ethical_route(nodes: List[Node], depot: Node, edges: List[Edge], ethical_rule: str) -> Tuple[List[Node], float]:
-    """
+    ""   
+    
     Part C: Implement an ethically-modified greedy algorithm.
     
     Modify your code from either Part A or B to incorporate ethical considerations.
@@ -189,31 +229,83 @@ def greedy_ethical_route(nodes: List[Node], depot: Node, edges: List[Edge], ethi
     Returns:
         Tuple[List[Node], float]: (route as list of nodes, total profit/earnings)
         
-    TODO: Students implement this function with ethical modifications
-    """
-def greedy_ethical_route(nodes: List[Node], depot: Node, edges: List[Edge], ethical_rule: str) -> Tuple[List[Node], float]:
-    """
-    Part C: Implement an ethically-modified greedy algorithm.
-    
-    Modify your code from either Part A or B to incorporate ethical considerations.
-    
-    Choose ONE ethical rule to implement:
-    - "fairness": Alternate between high-tip and low-tip regions
-    - "fatigue": Limit consecutive long-distance drives 
-    - "priority": Consider delivery priority levels
-    
-    Args:
-        nodes (List[Node]): All delivery locations including depot
-        depot (Node): The starting depot location
-        edges (List[Edge]): All road connections between cities
-        ethical_rule (str): Which ethical rule to apply
-        
-    Returns:
-        Tuple[List[Node], float]: (route as list of nodes, total profit/earnings)
-        
-    TODO: Students implement this function with ethical modifications
+    TODO: Students implement this function with ethical modifications  
+
     """
     # START YOUR IMPLEMENTATION HERE
+
+    visited = set()
+    route = [depot]
+    current = depot
+    total_earnings = 0.0
+
+    # Choosing fairness rule/tracking if the last stop was high or low tip
+    last_was_high_tip = False
+    # Starting with false so first stop can be either
+    visited.add(depot.id)
+    # Mark visited depot 
+    visited.add(depot.id)
+    # Continuing until all nodes (customers in this case) are visited) 
+    customers = []
+    for node in nodes:
+        if not node.is_depot:
+            customers.append(node)
+
+    # visit each customers +1 for depot!
+    while len(visited) < len(customers) +1:
+        # get possible next stops (unvisited neighbors)
+        neighbors = get_neighbors(current, edges)
+        next_stops = []
+            for n in neighbors:
+                if n.id not in visited and n.is_depot == False:
+                    next_stops.append(n)
+    # If no neighbors found, find the best stop by profit
+    if not next_stops:
+        break 
+
+    best_next = None
+    best_score = -999999.0
+    best_earnings = 0.0
+for neighbor in next_stops:
+    # calculate the best earnings
+    dist = current.distance_to(neighbor)
+    cost = calculate_travel_cost(dist)
+    base_earnings = neighbor.delivery_fee + neighbor.estimated_tip - cost
+# Applying fairness rule, just using random tip numbers to be considered low or high
+score = base_earnings
+is_high_tip = neighbor.estimated_tip >= 3.00
+# bonus alternating between high and low tip areas or penalty for serving only same type 
+if is_high_tip != last_was_high_tip:
+    score += 3.0
+else:
+    score -=2.0 
+# bonus for serving low tip areas
+if not is_high_tip and last_was_high_tip
+    score += 2.0
+if score > best_score:
+    best_score = score
+    best_next = neighbor
+    best_earnings = base_earnings
+    best_is_high_tip = is_high_tip
+
+# Move to best next stop
+if best_next:
+    current = best_next
+    route.append(current)
+    visited.add(current.id)
+    total_earnings += best+earnings
+    last_was_high_tip = best_is_high_tip
+
+# return to depot
+if current != depot:
+    return_dist = current.distance_to(depot)
+    return_cost = calculate_travel_cost(return_dist)
+    total_earnings -+ return_cost
+    route.append(depot)
+
+return route, total_earnings
+
+
     
     # Hints:
     # - Start with either your Part A or Part B algorithm as a base
